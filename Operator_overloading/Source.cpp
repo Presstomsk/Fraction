@@ -69,6 +69,24 @@ public:
 		cout << "CopyAssignment: \t" << this << endl;
 		return *this;
 	}
+	Fraction& operator+=(const Fraction& other)
+	{
+		this->to_improper();
+		this->set_numerator(this->numerator*other.denominator + other.numerator*this->denominator);
+		this->set_denominator(this->denominator * other.denominator);
+		this->to_proper();
+		this->reduce();
+		return *this;
+	}
+	Fraction& operator-=(const Fraction& other)
+	{
+		this->to_improper();
+		this->set_numerator(this->numerator * other.denominator - other.numerator * this->denominator);
+		this->set_denominator(this->denominator * other.denominator);
+		this->to_proper();
+		this->reduce();
+		return *this;
+	}
 	/*------------------------------------*/
 	void to_proper()
 	{   
@@ -81,7 +99,7 @@ public:
 	}
 	void to_improper()
 	{
-		this->numerator = this->integer * this->denominator + this->numerator;
+		this->numerator = this->integer * this->denominator+ this->numerator;
 		this->integer = 0;		
 	}
 	void reduce()
@@ -106,6 +124,19 @@ public:
 		this->to_proper();
 		
 	}
+	void print() const
+	{
+		if (this->numerator && this->integer)
+		{
+			cout << integer << "(" << numerator << "/" << denominator << ")" << endl;
+		}
+		else if (!(this->integer))
+		{
+			cout << numerator << "/" << denominator << endl;
+		}
+		else
+			cout << integer << endl;
+	}
 
 
 };
@@ -113,31 +144,18 @@ public:
 void main()
 {
 	setlocale(LC_ALL, "");
-	Fraction a(10, 5);
-	Fraction b(3, 4, 6);
+	Fraction a(23, 15);
+	Fraction b(24, 15);
 	a.to_proper();
-	if (a.get_numerator() && a.get_integer())
-	{
-		cout << a.get_integer() << "(" << a.get_numerator() << "/" << a.get_denominator() << ")" << endl;
-	}
-	else if (!(a.get_integer())) 
-	{
-		cout << a.get_numerator() << "/" << a.get_denominator() << endl;
-	}
-	else 
-		cout << a.get_integer() << endl;
+	a.print();
 	a.to_improper();
-	cout << a.get_numerator() << "/" << a.get_denominator() << endl;
+	a.print();
 	a.reduce();
-	if (a.get_numerator() && a.get_integer())
-	{
-		cout << a.get_integer() << "(" << a.get_numerator() << "/" << a.get_denominator() << ")" << endl;
-	}
-	else if (!(a.get_integer()))
-	{
-		cout << a.get_numerator() << "/" << a.get_denominator() << endl;
-	}
-	else
-		cout << a.get_integer() << endl;
+	a.print();
+	a += b;
+	a.print();
+	a -= b;
+	a.print();
+
 }
 	
