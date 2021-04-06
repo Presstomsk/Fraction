@@ -72,7 +72,7 @@ public:
 	/*------------------------------------*/
 	void to_proper()
 	{   
-		int dif = 0, i = 1;
+		int i = 1;
 		for (;this->numerator >= this->denominator;i++)
 		{
 			this->numerator=this->numerator-this->denominator;
@@ -82,7 +82,29 @@ public:
 	void to_improper()
 	{
 		this->numerator = this->integer * this->denominator + this->numerator;
-		this->integer = 0;
+		this->integer = 0;		
+	}
+	void reduce()
+	{
+		this->to_improper();
+		int CommonMultiple;                                  
+		do {
+			if (this->numerator < this->denominator)                                    
+				CommonMultiple = this->numerator;
+			else                                                  
+				CommonMultiple = this->denominator;
+			for (; CommonMultiple > 0; CommonMultiple--) 
+			{                                                 
+				if (!(this->numerator % CommonMultiple) && !(this->denominator % CommonMultiple)) 
+				{                                    
+					this->numerator = this->numerator / CommonMultiple;
+					this->denominator = this->denominator / CommonMultiple;
+					break;                               
+				}
+			}
+		} while (CommonMultiple != 1);
+		this->to_proper();
+		
 	}
 
 
@@ -91,11 +113,31 @@ public:
 void main()
 {
 	setlocale(LC_ALL, "");
-	Fraction a(17, 5);
+	Fraction a(10, 5);
 	Fraction b(3, 4, 6);
 	a.to_proper();
-	cout << a.get_integer() << "(" << a.get_numerator() << "/" << a.get_denominator() << ")" << endl;
+	if (a.get_numerator() && a.get_integer())
+	{
+		cout << a.get_integer() << "(" << a.get_numerator() << "/" << a.get_denominator() << ")" << endl;
+	}
+	else if (!(a.get_integer())) 
+	{
+		cout << a.get_numerator() << "/" << a.get_denominator() << endl;
+	}
+	else 
+		cout << a.get_integer() << endl;
 	a.to_improper();
 	cout << a.get_numerator() << "/" << a.get_denominator() << endl;
+	a.reduce();
+	if (a.get_numerator() && a.get_integer())
+	{
+		cout << a.get_integer() << "(" << a.get_numerator() << "/" << a.get_denominator() << ")" << endl;
+	}
+	else if (!(a.get_integer()))
+	{
+		cout << a.get_numerator() << "/" << a.get_denominator() << endl;
+	}
+	else
+		cout << a.get_integer() << endl;
 }
 	
