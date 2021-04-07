@@ -69,22 +69,52 @@ public:
 		cout << "CopyAssignment: \t" << this << endl;
 		return *this;
 	}
-	Fraction& operator+=(const Fraction& other)
+	Fraction& operator+=(Fraction& other)
 	{
 		this->to_improper();
+		other.to_improper();
 		this->set_numerator(this->numerator*other.denominator + other.numerator*this->denominator);
 		this->set_denominator(this->denominator * other.denominator);
 		this->to_proper();
+		other.to_proper();
 		this->reduce();
+		other.reduce();
 		return *this;
 	}
-	Fraction& operator-=(const Fraction& other)
+	Fraction& operator-=(Fraction& other)
 	{
 		this->to_improper();
+		other.to_improper();
 		this->set_numerator(this->numerator * other.denominator - other.numerator * this->denominator);
 		this->set_denominator(this->denominator * other.denominator);
 		this->to_proper();
+		other.to_proper();
 		this->reduce();
+		other.reduce();
+		return *this;
+	}
+	Fraction& operator*=(Fraction& other)
+	{
+		this->to_improper();
+		other.to_improper();
+		this->set_numerator(this->numerator * other.numerator);
+		this->set_denominator(this->denominator * other.denominator);
+		this->to_proper();
+		other.to_proper();
+		this->reduce();
+		other.reduce();
+		return *this;
+	}
+	Fraction& operator/=(Fraction& other)
+	{
+		this->to_improper();
+		other.to_improper();
+		this->set_numerator(this->numerator * other.denominator);
+		this->set_denominator(this->denominator * other.numerator);
+		this->to_proper();
+		other.to_proper();
+		this->reduce();
+		other.reduce();
 		return *this;
 	}
 	/*------------------------------------*/
@@ -141,21 +171,94 @@ public:
 
 };
 
+Fraction operator+(Fraction& left, Fraction& right)
+{
+	Fraction result;
+	left.to_improper();
+	right.to_improper();
+	result.set_numerator(left.get_numerator() * right.get_denominator() + right.get_numerator() * left.get_denominator());
+	result.set_denominator(left.get_denominator() * right.get_denominator());
+	left.to_proper();
+	right.to_proper();
+	left.reduce();
+	right.reduce();
+	result.to_proper();
+	result.reduce();
+	return result;
+}
+Fraction operator-(Fraction& left, Fraction& right)
+{
+	Fraction result;
+	left.to_improper();
+	right.to_improper();
+	result.set_numerator(left.get_numerator() * right.get_denominator() - right.get_numerator() * left.get_denominator());
+	result.set_denominator(left.get_denominator() * right.get_denominator());
+	left.to_proper();
+	right.to_proper();
+	left.reduce();
+	right.reduce();
+	result.to_proper();
+	result.reduce();
+	return result;
+}
+Fraction operator*(Fraction& left, Fraction& right)
+{
+	Fraction result;
+	left.to_improper();
+	right.to_improper();
+	result.set_numerator(left.get_numerator() * right.get_numerator());
+	result.set_denominator(left.get_denominator() * right.get_denominator());
+	left.to_proper();
+	right.to_proper();
+	left.reduce();
+	right.reduce();
+	result.to_proper();
+	result.reduce();
+	return result;
+}
+Fraction operator/(Fraction& left, Fraction& right)
+{
+	Fraction result;
+	left.to_improper();
+	right.to_improper();
+	result.set_numerator(left.get_numerator() * right.get_denominator());
+	result.set_denominator(left.get_denominator() * right.get_numerator());
+	left.to_proper();
+	right.to_proper();
+	left.reduce();
+	right.reduce();
+	result.to_proper();
+	result.reduce();
+	return result;
+}
+
 void main()
 {
 	setlocale(LC_ALL, "");
-	Fraction a(23, 15);
-	Fraction b(24, 15);
+	Fraction a(10, 5);
+	Fraction b(2, 5);
 	a.to_proper();
-	a.print();
+	cout << "Переводим неправильную дробь в правильную: "; a.print();
 	a.to_improper();
-	a.print();
+	cout << "Переводим правильную дробь в неправильную: "; a.print();
 	a.reduce();
-	a.print();
+	cout << "Сокращаем дробь: "; a.print();
 	a += b;
 	a.print();
 	a -= b;
 	a.print();
+	a *= b;
+	a.print();
+	a /= b;
+	a.print();
+	Fraction c = a + b;
+	c.print();
+	c = a - b;
+	c.print();
+	c = a * b;
+	c.print();
+	c = a / b;
+	c.print();
 
 }
 	
