@@ -54,11 +54,17 @@ public:
 		this->integer = z;
 		this->numerator = x;
 		this->denominator = y;
-		cout << "Constructor:\t\t" << this << endl;
+		
+	}
+	Fraction(const Fraction& other)
+	{
+		this->numerator = other.numerator;
+		this->denominator = other.denominator;
+		this->integer = other.integer;
 	}
 	~Fraction()
 	{
-		cout << "Destructor:\t" << this << endl;
+		
 	}
 	/*-----------------------------------*/
 	Fraction& operator=(const Fraction& other)
@@ -66,7 +72,6 @@ public:
 		this->integer = other.integer;
 		this->numerator = other.numerator;
 		this->denominator = other.denominator;
-		cout << "CopyAssignment: \t" << this << endl;
 		return *this;
 	}
 	Fraction& operator+=(Fraction& other)
@@ -116,6 +121,42 @@ public:
 		this->reduce();
 		other.reduce();
 		return *this;
+	}
+	Fraction& operator++()
+	{
+		this->to_improper();		
+		this->set_numerator(this->numerator+this->denominator);
+		this->to_proper();
+		this->reduce();
+		return *this;
+
+	}
+	Fraction operator++(int)
+	{
+		Fraction old = *this;
+		this->to_improper();
+		this->set_numerator(this->numerator + this->denominator);
+		this->to_proper();
+		this->reduce();
+		return old;
+	}
+	Fraction& operator--()
+	{
+		this->to_improper();
+		this->set_numerator(this->numerator - this->denominator);
+		this->to_proper();
+		this->reduce();
+		return *this;
+
+	}
+	Fraction operator--(int)
+	{
+		Fraction old = *this;
+		this->to_improper();
+		this->set_numerator(this->numerator - this->denominator);
+		this->to_proper();
+		this->reduce();
+		return old;
 	}
 	/*------------------------------------*/
 	void to_proper()
@@ -231,11 +272,21 @@ Fraction operator/(Fraction& left, Fraction& right)
 	result.reduce();
 	return result;
 }
+/*------------------------------------------------------------*/
+bool operator==(Fraction left, Fraction right)
+{
+	left.to_improper();
+	right.to_improper();
+	left.set_numerator(left.get_numerator() * right.get_denominator());
+	right.set_numerator(right.get_numerator() * left.get_denominator());
+	return left.get_numerator() == right.get_numerator();
+}
+
 
 void main()
 {
 	setlocale(LC_ALL, "");
-	Fraction a(10, 5);
+	Fraction a(2, 5);
 	Fraction b(2, 5);
 	a.to_proper();
 	cout << "Переводим неправильную дробь в правильную: "; a.print();
@@ -243,22 +294,26 @@ void main()
 	cout << "Переводим правильную дробь в неправильную: "; a.print();
 	a.reduce();
 	cout << "Сокращаем дробь: "; a.print();
-	a += b;
-	a.print();
-	a -= b;
-	a.print();
-	a *= b;
-	a.print();
-	a /= b;
-	a.print();
+	(a += b).print();
+	(a -= b).print();
+	(a *= b).print();
+	(a /= b).print();
 	Fraction c = a + b;
 	c.print();
-	c = a - b;
-	c.print();
+	a = c - b;
+	a.print();
 	c = a * b;
 	c.print();
 	c = a / b;
 	c.print();
+	(++a).print();
+	a++.print();
+	a.print();
+	(--a).print();
+	a--.print();
+	cout << (a == b) << endl;
+	a.print();
+	b.print();
 
-}
+}  
 	
