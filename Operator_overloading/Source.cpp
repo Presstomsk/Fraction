@@ -158,6 +158,7 @@ public:
 		this->reduce();
 		return old;
 	}
+
 	/*------------------------------------*/
 	void to_proper()
 	{   
@@ -212,7 +213,7 @@ public:
 
 };
 
-Fraction operator+(Fraction& left, Fraction& right)
+Fraction operator+(Fraction left, Fraction right)
 {
 	Fraction result;
 	left.to_improper();
@@ -227,7 +228,7 @@ Fraction operator+(Fraction& left, Fraction& right)
 	result.reduce();
 	return result;
 }
-Fraction operator-(Fraction& left, Fraction& right)
+Fraction operator-(Fraction left, Fraction right)
 {
 	Fraction result;
 	left.to_improper();
@@ -242,7 +243,7 @@ Fraction operator-(Fraction& left, Fraction& right)
 	result.reduce();
 	return result;
 }
-Fraction operator*(Fraction& left, Fraction& right)
+Fraction operator*(Fraction left, Fraction right)
 {
 	Fraction result;
 	left.to_improper();
@@ -257,7 +258,7 @@ Fraction operator*(Fraction& left, Fraction& right)
 	result.reduce();
 	return result;
 }
-Fraction operator/(Fraction& left, Fraction& right)
+Fraction operator/(Fraction left, Fraction right)
 {
 	Fraction result;
 	left.to_improper();
@@ -281,13 +282,53 @@ bool operator==(Fraction left, Fraction right)
 	right.set_numerator(right.get_numerator() * left.get_denominator());
 	return left.get_numerator() == right.get_numerator();
 }
-
+bool operator!=(Fraction left, Fraction right)
+{
+	left.to_improper();
+	right.to_improper();
+	left.set_numerator(left.get_numerator() * right.get_denominator());
+	right.set_numerator(right.get_numerator() * left.get_denominator());
+	return left.get_numerator() != right.get_numerator();
+}
+bool operator<=(Fraction left, Fraction right)
+{
+	left.to_improper();
+	right.to_improper();
+	left.set_numerator(left.get_numerator() * right.get_denominator());
+	right.set_numerator(right.get_numerator() * left.get_denominator());
+	return left.get_numerator() <= right.get_numerator();
+}
+bool operator>=(Fraction left, Fraction right)
+{
+	left.to_improper();
+	right.to_improper();
+	left.set_numerator(left.get_numerator() * right.get_denominator());
+	right.set_numerator(right.get_numerator() * left.get_denominator());
+	return left.get_numerator() >= right.get_numerator();
+}
+bool operator>(Fraction left, Fraction right)
+{
+	left.to_improper();
+	right.to_improper();
+	left.set_numerator(left.get_numerator() * right.get_denominator());
+	right.set_numerator(right.get_numerator() * left.get_denominator());
+	return left.get_numerator() > right.get_numerator();
+}
+bool operator<(Fraction left, Fraction right)
+{
+	left.to_improper();
+	right.to_improper();
+	left.set_numerator(left.get_numerator() * right.get_denominator());
+	right.set_numerator(right.get_numerator() * left.get_denominator());
+	return left.get_numerator() < right.get_numerator();
+}
+/*-------------------------------------------------------------*/
 
 void main()
 {
 	setlocale(LC_ALL, "");
 	Fraction a(2, 5);
-	Fraction b(2, 5);
+	Fraction b(5, 4);
 	a.to_proper();
 	cout << "Переводим неправильную дробь в правильную: "; a.print();
 	a.to_improper();
@@ -312,8 +353,10 @@ void main()
 	(--a).print();
 	a--.print();
 	cout << (a == b) << endl;
-	a.print();
-	b.print();
-
+	cout << (a != b) << endl;
+	cout << (a <= b) << endl;
+	cout << (a >= b) << endl;
+	cout << (a > b) << endl;
+	cout << (a < b) << endl;
 }  
 	
