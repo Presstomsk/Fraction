@@ -48,16 +48,52 @@ public:
 	}
 	void set_denominator(int x)
 	{
-		if (x >= 0)this->denominator = x;
-		else this->denominator = -x;
+		/*if (x > 0) this->denominator = x;
+		else if(x < 0) this->denominator = -x;
+		else this->denominator = 1;*/
+		if (x == 0)throw exception("Zero in denominator");//Бросаем исключение с сообщением об ошибке
+		this->denominator = x;
 	}
 	/*--------------------------------*/
-
-	Fraction(int x = 0, int y = 0, int z=0)
+	Fraction()
 	{
-		this->integer = z;
-		this->numerator = x;
-		this->denominator = y;
+		integer = 0;
+		numerator = 0;
+		denominator = 0;
+		cout << "Constructor0:\t" << this << endl;
+	}
+	explicit Fraction(int integer)
+	{
+		this->integer = integer;
+		this->numerator = 0;
+		this->denominator = 1;
+		cout << "Constructor1:\t" << this << endl;
+	}
+	/*Fraction(double decimal)
+	{ 
+		this->integer = 0;		
+		this->denominator = 1;
+
+		do {
+			
+			this->numerator = decimal * this->denominator;
+			this->denominator *= 10;
+						
+		} while ((double)this->numerator - this->numerator) != 0);
+	}*/
+	Fraction(int numerator, int denominator)
+	{
+		this->integer = 0;
+		this->numerator = numerator;
+		this->set_denominator(denominator);
+		cout << "Constructor2:\t" << this << endl;
+	}
+	Fraction(int integer, int numerator, int denominator)
+	{
+		this->integer = integer;
+		this->numerator = numerator;
+		this->set_denominator(denominator);
+		cout << "Constructor3:\t" << this << endl;
 		
 	}
 	Fraction(const Fraction& other)
@@ -203,6 +239,14 @@ public:
 		else
 			cout << integer << endl;
 	}
+	explicit operator int()const
+	{
+		return integer;
+	}
+	explicit operator double()const
+	{   
+		return (this->integer + (double)this->numerator / this->denominator);		
+	}
 
 
 };
@@ -332,7 +376,7 @@ istream& operator>>(istream& is, Fraction& obj) //есть вопросы , ну
 void main() 
 {
 	setlocale(LC_ALL, "");
-	Fraction a;
+	/*Fraction a;
 	cout << "Введите дробь 'a' в формате x/y: "; cin >> a;
 	cout << "Вы ввели дробь 'a': "; cout << a ;
 	a.to_proper();
@@ -367,6 +411,19 @@ void main()
 	cout << "Значение выражения (a >= b) равно : " << (a >= b) << endl;
 	cout << "Значение выражения (a > b) равно : " << (a > b) << endl;
 	cout << "Значение выражения (a < b) равно : " << (a < b) << endl;
-	
+	cout << "Преобразование типов : " << endl;*/
+	Fraction A(2, 3, 4);
+	cout << A << endl;
+	int m = (int)A;
+	cout << m << endl;
+	double n = (double)A;
+	cout << n << endl;
+	Fraction B = (Fraction)3;//Преобразование значения '3' типа 'int' во Fraction
+	               //Это преобразование возможно благодаря конструктору с одним параметром
+	cout << B << endl;
+	B.to_proper();
+	/*Fraction C = 2.7;
+	C.print();*/
+
 }  
 	
