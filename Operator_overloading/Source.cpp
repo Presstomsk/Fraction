@@ -12,6 +12,7 @@
 */
 
 #include <iostream>
+
 using namespace std;
 
 #define tab "\t"
@@ -37,15 +38,18 @@ public:
 	/*-------------------------------*/
 	void set_integer(int x)
 	{
-		this->integer = x;	
+		if (x >= 0)this->integer = x;
+		else this->integer = -x;
 	}
 	void set_numerator (int x)
 	{
-		this->numerator = x;
+		if (x >= 0)this->numerator = x;
+		else this->numerator = -x;
 	}
 	void set_denominator(int x)
 	{
-		this->denominator = x;
+		if (x >= 0)this->denominator = x;
+		else this->denominator = -x;
 	}
 	/*--------------------------------*/
 
@@ -80,8 +84,6 @@ public:
 		other.to_improper();
 		this->set_numerator(this->numerator*other.denominator + other.numerator*this->denominator);
 		this->set_denominator(this->denominator * other.denominator);
-		this->to_proper();
-		other.to_proper();
 		this->reduce();
 		other.reduce();
 		return *this;
@@ -92,8 +94,6 @@ public:
 		other.to_improper();
 		this->set_numerator(this->numerator * other.denominator - other.numerator * this->denominator);
 		this->set_denominator(this->denominator * other.denominator);
-		this->to_proper();
-		other.to_proper();
 		this->reduce();
 		other.reduce();
 		return *this;
@@ -104,8 +104,6 @@ public:
 		other.to_improper();
 		this->set_numerator(this->numerator * other.numerator);
 		this->set_denominator(this->denominator * other.denominator);
-		this->to_proper();
-		other.to_proper();
 		this->reduce();
 		other.reduce();
 		return *this;
@@ -116,8 +114,6 @@ public:
 		other.to_improper();
 		this->set_numerator(this->numerator * other.denominator);
 		this->set_denominator(this->denominator * other.numerator);
-		this->to_proper();
-		other.to_proper();
 		this->reduce();
 		other.reduce();
 		return *this;
@@ -126,7 +122,6 @@ public:
 	{
 		this->to_improper();		
 		this->set_numerator(this->numerator+this->denominator);
-		this->to_proper();
 		this->reduce();
 		return *this;
 
@@ -136,7 +131,6 @@ public:
 		Fraction old = *this;
 		this->to_improper();
 		this->set_numerator(this->numerator + this->denominator);
-		this->to_proper();
 		this->reduce();
 		return old;
 	}
@@ -144,7 +138,6 @@ public:
 	{
 		this->to_improper();
 		this->set_numerator(this->numerator - this->denominator);
-		this->to_proper();
 		this->reduce();
 		return *this;
 
@@ -154,7 +147,6 @@ public:
 		Fraction old = *this;
 		this->to_improper();
 		this->set_numerator(this->numerator - this->denominator);
-		this->to_proper();
 		this->reduce();
 		return old;
 	}
@@ -175,14 +167,14 @@ public:
 		this->integer = 0;		
 	}
 	void reduce()
-	{
-		this->to_improper();
+	{		
 		int CommonMultiple;                                  
 		do {
-			if (this->numerator < this->denominator)                                    
+			if ((this->numerator < this->denominator) && (this->numerator != 0))
 				CommonMultiple = this->numerator;
-			else                                                  
+			else if (this->numerator > this->denominator)
 				CommonMultiple = this->denominator;
+			else break;
 			for (; CommonMultiple > 0; CommonMultiple--) 
 			{                                                 
 				if (!(this->numerator % CommonMultiple) && !(this->denominator % CommonMultiple)) 
@@ -198,14 +190,16 @@ public:
 	}
 	void print() const
 	{
+		
 		if (this->numerator && this->integer)
 		{
 			cout << integer << "(" << numerator << "/" << denominator << ")" << endl;
 		}
-		else if (!(this->integer))
+		else if (!(this->integer) && this->numerator)
 		{
 			cout << numerator << "/" << denominator << endl;
 		}
+
 		else
 			cout << integer << endl;
 	}
@@ -220,10 +214,6 @@ Fraction operator+(Fraction left, Fraction right)
 	right.to_improper();
 	result.set_numerator(left.get_numerator() * right.get_denominator() + right.get_numerator() * left.get_denominator());
 	result.set_denominator(left.get_denominator() * right.get_denominator());
-	left.to_proper();
-	right.to_proper();
-	left.reduce();
-	right.reduce();
 	result.to_proper();
 	result.reduce();
 	return result;
@@ -235,10 +225,6 @@ Fraction operator-(Fraction left, Fraction right)
 	right.to_improper();
 	result.set_numerator(left.get_numerator() * right.get_denominator() - right.get_numerator() * left.get_denominator());
 	result.set_denominator(left.get_denominator() * right.get_denominator());
-	left.to_proper();
-	right.to_proper();
-	left.reduce();
-	right.reduce();
 	result.to_proper();
 	result.reduce();
 	return result;
@@ -250,10 +236,6 @@ Fraction operator*(Fraction left, Fraction right)
 	right.to_improper();
 	result.set_numerator(left.get_numerator() * right.get_numerator());
 	result.set_denominator(left.get_denominator() * right.get_denominator());
-	left.to_proper();
-	right.to_proper();
-	left.reduce();
-	right.reduce();
 	result.to_proper();
 	result.reduce();
 	return result;
@@ -265,10 +247,6 @@ Fraction operator/(Fraction left, Fraction right)
 	right.to_improper();
 	result.set_numerator(left.get_numerator() * right.get_denominator());
 	result.set_denominator(left.get_denominator() * right.get_numerator());
-	left.to_proper();
-	right.to_proper();
-	left.reduce();
-	right.reduce();
 	result.to_proper();
 	result.reduce();
 	return result;
@@ -323,40 +301,72 @@ bool operator<(Fraction left, Fraction right)
 	return left.get_numerator() < right.get_numerator();
 }
 /*-------------------------------------------------------------*/
+ostream& operator<<(ostream& os, const Fraction& obj)
+{
+	
+		if (!(obj.get_numerator()))
+			os << obj.get_integer();
+		else if (!(obj.get_integer()) && obj.get_numerator())
+			os << obj.get_numerator() << "/" << obj.get_denominator();
+		else if (obj.get_integer() && obj.get_numerator())
+			os << obj.get_integer() << "(" << obj.get_numerator() << "/" << obj.get_denominator() << ")";
 
-void main()
+		return os;
+	
+}
+istream& operator>>(istream& is, Fraction& obj) //есть вопросы , нужно доработать
+{
+	int x, y;
+	char c;
+	is >> x >> c >> y;
+	while(c != '/')
+	{
+		cout << "Введите корректное значение: "; is >> x >> c >> y;
+	}
+	obj.set_integer(0);
+	obj.set_numerator(x);
+	obj.set_denominator(y);
+	return is;
+}
+
+void main() 
 {
 	setlocale(LC_ALL, "");
-	Fraction a(2, 5);
-	Fraction b(5, 4);
+	Fraction a;
+	cout << "Введите дробь 'a' в формате x/y: "; cin >> a;
+	cout << "Вы ввели дробь 'a': "; cout << a ;
 	a.to_proper();
+	cout << endl;
 	cout << "Переводим неправильную дробь в правильную: "; a.print();
 	a.to_improper();
 	cout << "Переводим правильную дробь в неправильную: "; a.print();
 	a.reduce();
 	cout << "Сокращаем дробь: "; a.print();
-	(a += b).print();
-	(a -= b).print();
-	(a *= b).print();
-	(a /= b).print();
+	Fraction b;
+	cout << "Введите дробь 'b' в формате x/y: "; cin >> b;
+	cout << "Вы ввели дробь 'b': "; cout << b << endl;
+	cout << "Значение выражения (a+=b) равно : "; (a += b).print();
+	cout << "Значение выражения (a-=b) равно : "; (a -= b).print();
+	cout << "Значение выражения (a*=b) равно : "; (a *= b).print();
+	cout << "Значение выражения (a/=b) равно : "; (a /= b).print();
 	Fraction c = a + b;
-	c.print();
-	a = c - b;
-	a.print();
+	cout << "Значение выражения (a+b) равно : "; c.print();
+	c = a - b;
+	cout << "Значение выражения (a-b) равно : "; c.print();
 	c = a * b;
-	c.print();
+	cout << "Значение выражения (a*b) равно : "; c.print();
 	c = a / b;
-	c.print();
-	(++a).print();
-	a++.print();
-	a.print();
-	(--a).print();
-	a--.print();
-	cout << (a == b) << endl;
-	cout << (a != b) << endl;
-	cout << (a <= b) << endl;
-	cout << (a >= b) << endl;
-	cout << (a > b) << endl;
-	cout << (a < b) << endl;
+	cout << "Значение выражения (a/b) равно : "; c.print();
+	cout << "Значение выражения (++a) равно : "; (++a).print();
+	cout << "Значение выражения (a++) равно : "; a++.print();
+	cout << "Значение выражения (--a) равно : "; (--a).print();
+	cout << "Значение выражения (a--) равно : "; a--.print();
+	cout << "Значение выражения (a == b) равно : " << (a == b) << endl;
+	cout << "Значение выражения (a != b) равно : " << (a != b) << endl;
+	cout << "Значение выражения (a <= b) равно : " << (a <= b) << endl;
+	cout << "Значение выражения (a >= b) равно : " << (a >= b) << endl;
+	cout << "Значение выражения (a > b) равно : " << (a > b) << endl;
+	cout << "Значение выражения (a < b) равно : " << (a < b) << endl;
+	
 }  
 	
