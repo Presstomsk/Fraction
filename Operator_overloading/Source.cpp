@@ -69,18 +69,19 @@ public:
 		this->denominator = 1;
 		cout << "Constructor1:\t" << this << endl;
 	}
-	/*Fraction(double decimal)
+	Fraction(double decimal)
 	{ 
-		this->integer = 0;		
-		this->denominator = 1;
-
-		do {
-			
+		this->set_integer(0);
+		this->set_denominator(1);
+		this->set_numerator(decimal);
+		for (; decimal - this->get_numerator() > 0; this->denominator *= 10)
+		{
 			this->numerator = decimal * this->denominator;
-			this->denominator *= 10;
-						
-		} while ((double)this->numerator - this->numerator) != 0);
-	}*/
+			decimal *= this->denominator;
+		}
+		this->reduce();
+		cout << "Constructor1.1:\t" << this << endl;
+	}
 	Fraction(int numerator, int denominator)
 	{
 		this->integer = 0;
@@ -422,8 +423,8 @@ void main()
 	               //Это преобразование возможно благодаря конструктору с одним параметром
 	cout << B << endl;
 	B.to_proper();
-	/*Fraction C = 2.7;
-	C.print();*/
+	Fraction C = 0.185;
+	C.print();
 
 }  
 	
