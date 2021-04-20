@@ -425,6 +425,6 @@ void main()
 	B.to_proper();
 	Fraction C = 0.185;
 	C.print();
-
+	cout << C << " = " << (double)C << endl;
 }  
 	
